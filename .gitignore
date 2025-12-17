@@ -1,0 +1,70 @@
+# Virtual environment
+venv/
+.env
+env/
+ENV/
+env*/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+*.pyo
+*.pyd
+
+# Flask
+instance/
+.flaskenv
+*.flask
+
+# Database (nếu có file SQLite)
+*.db
+*.sqlite
+*.sqlite3
+
+# Migrations (KHÔNG ĐẨY LÊN GITHUB)
+migrations/
+
+# IDE & Editor
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Dependencies
+pip-delete-this-directory.txt
+pip-wheel-metadata/
+
+# Build & Dist
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Testing
+htmlcov/
+.coverage
+.coverage.*
+cache/
+nosetests.xml
+coverage.xml
+*.cover
+
+# Jupyter
+.ipynb_checkpoints
+
+# Secret keys & config local
+config_local.py
+.secret
+.env.local
+
+# Deployment
+*.tar.gz
+*.zip
