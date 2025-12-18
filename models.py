@@ -36,11 +36,17 @@ class Student(User):
         self.phone = phone
         self.role = UserRole.STUDENT
 
+    def get_id(self):
+        return f"student:{self.id}"
+
 class Staff(User):
     __tablename__ = 'staff'
 
     taught_classes = db.relationship('Class', backref='teacher', lazy='dynamic')
     issued_invoices = db.relationship('Invoice', backref='cashier', lazy='dynamic')
+
+    def get_id(self):
+        return f"staff:{self.id}"
 
 
 class Level(db.Model):

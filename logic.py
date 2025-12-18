@@ -2,38 +2,41 @@ from app import db
 from models import Class, Enrollment
 
 
-def enroll_class(student_id, class_id):
-    cls = Class.query.get_or_404(class_id)
-
-    # 1. Check còn chỗ
-    if cls.current_students >= cls.max_students:
-        raise ValueError("Lớp đã đủ học viên")
-
-    # 2. Check đã đăng ký chưa
-    exists = Enrollment.query.filter_by(
-        student_id=student_id,
-        class_id=class_id
-    ).first()
-
-    if exists:
-        raise ValueError("Bạn đã đăng ký lớp này")
-
-    # 3. Tạo enrollment
-    enrollment = Enrollment(
-        student_id=student_id,
-        class_id=class_id,
-        status="enrolled"
+def get_enrolled_classes(student_id):
+    return (
+        db.session.query(Class)
+        .join(Enrollment)
+        .filter(
+            Enrollment.student_id == student_id,
+        )
+        .all()
     )
-    db.session.add(enrollment)
 
-    # 4. Tăng sĩ số
-    cls.current_students += 1
 
-    # 5. Tạo hóa đơn
-    # invoice = Invoice(
-    #     enrollment_id=enrollment.id,
-    #     amount=cls.level.tuition_fee,
-    #     status="unpaid"
-    # )
-    # db.session.add(invoice)
-    db.session.commit()
+from flask_mail import Message
+from app import mail
+
+
+def send_enroll_success_email(student, cls):
+    msg = Message(
+        subject="Xác nhận đăng ký khóa học thành công",
+        recipients=[student.email]
+    )
+
+    msg.body = f"""
+Xin chào {student.fullname},
+
+Bạn đã đăng ký thành công khóa học:
+
+- Khóa học: {cls.course.name}
+- Cấp độ: {cls.level.name}
+- Thời gian: {cls.start_date} → {cls.end_date}
+- Học phí: {cls.level.tuition_fee:,} VNĐ
+
+Vui lòng thanh toán học phí đúng hạn.
+
+Trân trọng,
+Language Center
+"""
+
+    mail.send(msg)

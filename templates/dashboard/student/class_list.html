@@ -9,7 +9,7 @@
             <div class="card-body">
                 <h2 class="card-title">Danh sách các khóa học phù hợp</h2>
 
-                <div class="mt-4 space-y-3 max-h-[420px] overflow-y-auto">
+                <div class="mt-4 pr-2 space-y-3 max-h-[420px] overflow-y-auto">
                     {% for c in courses %}
                         <div class="flex justify-between items-center p-4 border rounded-box hover:bg-base-200">
                             <div>
@@ -25,10 +25,7 @@
                             <div>
                                 {% if c.id in enrolled_class_ids %}
                                     <!-- ĐÃ ĐĂNG KÝ -->
-{#                                    <span class="badge badge-success badge-lg">#}
-{#                                        ✔ Đã đăng ký#}
-{#                                    </span>#}
-                                    <button class="btn btn-sm" disabled>Da dang ky</button>
+                                    <button class="btn btn-sm" disabled>Đã đăng ký</button>
 
                                 {% elif c.current_students >= c.max_students %}
                                     <!-- LỚP ĐẦY -->

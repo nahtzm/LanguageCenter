@@ -1,0 +1,88 @@
+{% extends "dashboard/dashboard_base.html" %}
+{% block title %}Teacher Dashboard{% endblock %}
+
+{% block dashboard_content %}
+
+    <div class="space-y-8">
+
+        <!-- HEADER -->
+        <div class="flex justify-between items-center">
+            <div>
+                <h1 class="text-3xl font-bold">Dashboard Giáo viên</h1>
+                <p class="opacity-70">Tổng quan lớp học & công việc giảng dạy</p>
+            </div>
+            <div class="badge badge-primary badge-lg">
+                {{ current_user.fullname }}
+            </div>
+        </div>
+
+        <!-- STAT CARDS -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+            <div class="card bg-base-100 shadow">
+                <div class="card-body">
+                    <h2 class="card-title">📚 Lớp đang dạy</h2>
+                    <p class="text-3xl font-bold text-primary">{{ total_classes }}</p>
+                    <p class="text-sm opacity-70">Lớp học đang hoạt động</p>
+                </div>
+            </div>
+
+            <div class="card bg-base-100 shadow">
+                <div class="card-body">
+                    <h2 class="card-title">👨‍🎓 Học viên</h2>
+                    <p class="text-3xl font-bold text-secondary">{{ total_students }}</p>
+                    <p class="text-sm opacity-70">Tổng số học viên</p>
+                </div>
+            </div>
+
+            <div class="card bg-base-100 shadow">
+                <div class="card-body">
+                    <h2 class="card-title">⏰ Buổi học hôm nay</h2>
+                    <p class="text-3xl font-bold text-accent">{{ today_classes }}</p>
+                    <p class="text-sm opacity-70">Theo lịch giảng dạy</p>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- CLASS LIST -->
+        <div class="card bg-base-100 shadow">
+            <div class="card-body">
+                <h2 class="card-title">📋 Danh sách lớp học</h2>
+
+                <div class="overflow-x-auto">
+                    <table class="table table-zebra">
+                        <thead>
+                        <tr>
+                            <th>Lớp</th>
+                            <th>Khóa học</th>
+                            <th>Sĩ số</th>
+                            <th>Thời gian</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for c in classes %}
+                            <tr>
+                                <td class="font-semibold">{{ c.name }}</td>
+                                <td>{{ c.course.name }} – {{ c.level.name }}</td>
+                                <td>{{ c.current_students }}/{{ c.max_students }}</td>
+                                <td>{{ c.start_date }} → {{ c.end_date }}</td>
+                                <td>
+                                    <a href="{{ url_for('teacher.dashboard', class_id=c.id) }}"
+                                       class="btn btn-sm btn-outline btn-primary">
+                                        Vào lớp
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+{% endblock %}

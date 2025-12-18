@@ -2,14 +2,15 @@ from flask import Blueprint, render_template, request, flash, redirect, url_for
 from flask_login import current_user
 
 from app import db
-from logic import enroll_class
-from models import Course, Class, Level, Enrollment, Invoice
+from logic import get_enrolled_classes, send_enroll_success_email
+from models import Course, Class, Level, Enrollment, Invoice, Student
 
 student_routes = Blueprint('student', __name__)
 
 @student_routes.route('/dashboard')
 def dashboard():
-    return render_template("dashboard/student/student.html")
+    classes = get_enrolled_classes(current_user.id)
+    return render_template("dashboard/student/student.html", classes=classes)
 
 @student_routes.route('/class_list')
 def class_list():
@@ -27,7 +28,6 @@ def class_list():
         e.class_id
         for e in Enrollment.query.filter_by(
             student_id=current_user.id,
-            status="enrolled"
         ).all()
     }
 
@@ -42,43 +42,38 @@ def class_list():
     )
 
 
-# def enroll_class(student_id, class_id):
-#     cls = Class.query.get_or_404(class_id)
-#
-#     # 1. Check còn chỗ
-#     if cls.current_students >= cls.max_students:
-#         raise ValueError("Lớp đã đủ học viên")
-#
-#     # 2. Check đã đăng ký chưa
-#     exists = Enrollment.query.filter_by(
-#         student_id=student_id,
-#         class_id=class_id
-#     ).first()
-#
-#     if exists:
-#         raise ValueError("Bạn đã đăng ký lớp này")
-#
-#     # 3. Tạo enrollment
-#     enrollment = Enrollment(
-#         student_id=student_id,
-#         class_id=class_id,
-#         status="enrolled"
-#     )
-#     db.session.add(enrollment)
-#
-#     # 4. Tăng sĩ số
-#     cls.current_students += 1
-#
-#     # 5. Tạo hóa đơn
-#     # invoice = Invoice(
-#     #     enrollment_id=enrollment.id,
-#     #     amount=cls.level.tuition_fee,
-#     #     status="unpaid"
-#     # )
-#     # db.session.add(invoice)
-#     db.session.commit()
 @student_routes.route("/enroll/<int:class_id>", methods=["POST"])
 def enroll(class_id):
-    enroll_class(current_user.id, class_id)
-    flash("Đăng ký thành công", "success")
+    cls = Class.query.get_or_404(class_id)
+    student = Student.query.get_or_404(current_user.id)
+
+    if cls.current_students >= cls.max_students:
+        raise ValueError("Lớp đã đủ học viên")
+
+    exists = Enrollment.query.filter_by(
+        student_id=current_user.id,
+        class_id=class_id
+    ).first()
+
+    if exists:
+        raise ValueError("Bạn đã đăng ký lớp này")
+
+    enrollment = Enrollment(
+        student_id=current_user.id,
+        class_id=class_id,
+    )
+    db.session.add(enrollment)
+
+    cls.current_students += 1
+
+    # 5. Tạo hóa đơn
+    # invoice = Invoice(
+    #     enrollment_id=enrollment.id,
+    #     amount=cls.level.tuition_fee,
+    #     status="unpaid"
+    # )
+    # db.session.add(invoice)
+    db.session.commit()
+    # send_enroll_success_email(student, cls)
+    flash("Đăng ký thành công. Bạn sẽ nhận được email xác nhận", "success")
     return redirect(url_for("student.class_list"))

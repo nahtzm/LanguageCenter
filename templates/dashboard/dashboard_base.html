@@ -49,22 +49,26 @@
   <!-- Sidebar -->
   <div class="drawer-side">
     <label for="dashboard-drawer" class="drawer-overlay"></label>
-    <aside class="w-64 bg-base-100 min-h-full shadow">
+      <aside class="w-50 bg-base-100 min-h-full shadow">
 
       <div class="p-4 text-xl font-bold border-b">Dashboard</div>
 
       <!-- Menu (render theo role) -->
-      <ul class="menu p-4">
+          <ul class="menu p-4">
+                {{ current_user.role }}
+              {% if current_user.role == UserRole.STUDENT %}
         <!-- Student -->
-        <li class="menu-title">Student</li>
-        <li><a href="/student/dashboard">Trang chủ</a></li>
-        <li><a href="/my-enrollments">Lớp của tôi</a></li>
-        <li><a href="/my-scores">Điểm</a></li>
-        <li><a href="/my-invoices">Hóa đơn</a></li>
+                  <li class="menu-title">Student</li>
+                  <li><a href="/student/dashboard">Trang chủ</a></li>
+                  <li><a href="/my-enrollments">Lớp của tôi</a></li>
+                  <li><a href="/my-scores">Điểm</a></li>
+                  <li><a href="/my-invoices">Hóa đơn</a></li>
+              {% elif current_user.role == UserRole.TEACHER %}
 
-{#        <!-- Teacher -->#}
-{#        <li class="menu-title mt-4">Teacher</li>#}
-{#        <li><a href="/teacher/classes">Lớp giảng dạy</a></li>#}
+                  <!-- Teacher -->
+                  <li class="menu-title mt-4">Teacher</li>
+                  <li><a href="/teacher/classes">Lớp giảng dạy</a></li>
+              {% endif %}
 {##}
 {#        <!-- Admin -->#}
 {#        <li class="menu-title mt-4">Admin</li>#}
