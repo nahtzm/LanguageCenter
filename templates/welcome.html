@@ -1,0 +1,29 @@
+{% extends "base.html" %} {% block title %}Welcome{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <div class="row text-center">
+            <div class="col-md-12">
+                <h1 class="display-4">Chào mừng đến với Hệ thống Quản lý Trung tâm Ngoại ngữ</h1>
+                <p class="lead mt-4">Quản lý lớp học, đăng ký khóa học, điểm danh, điểm số và học phí hiệu quả.</p>
+                <hr class="my-5">
+
+                <div class="d-grid gap-3 col-6 mx-auto">
+                    <a href="{{ url_for('auth.login') }}" class="btn btn-primary btn-lg">
+                        Đăng nhập
+                    </a>
+
+                    <!-- Nếu có đăng ký tài khoản học viên -->
+                    <a href="{{ url_for('auth.register') }}" class="btn btn-outline-success btn-lg">
+                        Đăng ký tài khoản học viên
+                    </a>
+
+                    {#                        <!-- Public xem lớp mở (không cần login) -->#}
+                    {#                        <a href="{{ url_for('public_classes') }}" class="btn btn-outline-info btn-lg">#}
+                    {#                            Xem các lớp đang mở & Đăng ký trực tuyến#}
+                    {#                        </a>#}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -3,35 +3,37 @@ from datetime import datetime, UTC
 from flask_login import UserMixin
 from sqlalchemy.dialects.mysql import DECIMAL
 
+class User(db.Model, UserMixin):
+    __abstract__ = True
 
-class Student(db.Model, UserMixin):
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(100), unique=True, nullable=False, index=True)
+    fullname = db.Column(db.String(100), nullable=False)
+    password = db.Column(db.String(200), nullable=False)
+    phone = db.Column(db.String(20))
+
+    def get_id(self):
+        return str(self.id)
+
+    def get_role(self):
+        if isinstance(self, Student):
+            return 'student'
+        elif isinstance(self, Staff):
+            return self.role
+        return None
+
+
+class Student(User):
     __tablename__ = 'student'
 
-    id = db.Column(db.Integer, primary_key=True)
-    fullname = db.Column(db.String(100), nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False)
-    password_hash = db.Column(db.String(255), nullable=False)
+    enrollments = db.relationship('Enrollment', backref='student', lazy='dynamic')
 
-    enrollments = db.relationship('Enrollment', backref='student', lazy=True)
-
-    # def get_id(self):
-    #     return str(self.id)  # cần cho Flask-Login
-
-
-class Staff(db.Model, UserMixin):
+class Staff(User):
     __tablename__ = 'staff'
+    role = db.Column(db.String(20))
 
-    id = db.Column(db.Integer, primary_key=True)
-    fullname = db.Column(db.String(100), nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False)
-    password_hash = db.Column(db.String(255), nullable=False)
-    role = db.Column(db.String(20), nullable=False)  # 'teacher', 'cashier', 'admin'
-
-    taught_classes = db.relationship('Class', backref='teacher', lazy=True)
-    issued_invoices = db.relationship('Invoice', backref='cashier', lazy=True)
-
-    # def get_id(self):
-    #     return str(self.id)
+    taught_classes = db.relationship('Class', backref='teacher', lazy='dynamic')
+    issued_invoices = db.relationship('Invoice', backref='cashier', lazy='dynamic')
 
 
 class Level(db.Model):
@@ -41,7 +43,7 @@ class Level(db.Model):
     name = db.Column(db.String(50), nullable=False)  # Beginner, Intermediate, Advanced
     tuition_fee = db.Column(DECIMAL(12, 2), nullable=False)  # học phí
 
-    classes = db.relationship('Class', backref='level', lazy=True)
+    classes = db.relationship('Class', backref='level')
 
 
 class Course(db.Model):
@@ -51,7 +53,7 @@ class Course(db.Model):
     name = db.Column(db.String(100), nullable=False)
     description = db.Column(db.Text)
 
-    classes = db.relationship('Class', backref='course', lazy=True)
+    classes = db.relationship('Class', backref='course')
 
 
 class Class(db.Model):
@@ -68,7 +70,7 @@ class Class(db.Model):
     level_id = db.Column(db.Integer, db.ForeignKey('level.id'), nullable=False)
     teacher_id = db.Column(db.Integer, db.ForeignKey('staff.id'))  # nullable
 
-    enrollments = db.relationship('Enrollment', backref='class_ref', lazy=True, cascade="all, delete-orphan")
+    enrollments = db.relationship('Enrollment', backref='class_ref', lazy='dynamic', cascade="all, delete-orphan")
 
 
 class Enrollment(db.Model):
@@ -81,9 +83,9 @@ class Enrollment(db.Model):
     student_id = db.Column(db.Integer, db.ForeignKey('student.id'), nullable=False)
     class_id = db.Column(db.Integer, db.ForeignKey('class_table.id'), nullable=False)
 
-    invoice = db.relationship('Invoice', backref='enrollment', uselist=False, lazy=True)
-    scores = db.relationship('Score', backref='enrollment', lazy=True, cascade="all, delete-orphan")
-    attendances = db.relationship('Attendance', backref='enrollment', lazy=True, cascade="all, delete-orphan")
+    invoice = db.relationship('Invoice', backref='enrollment', uselist=False)
+    scores = db.relationship('Score', backref='enrollment', lazy='dynamic', cascade="all, delete-orphan")
+    attendances = db.relationship('Attendance', backref='enrollment', cascade="all, delete-orphan")
 
 
 class ScoreConfig(db.Model):
@@ -95,7 +97,7 @@ class ScoreConfig(db.Model):
     is_active = db.Column(db.Boolean, default=True)
     auto_calculated = db.Column(db.Boolean, default=False)
 
-    scores = db.relationship('Score', backref='config', lazy=True)
+    scores = db.relationship('Score', backref='config', lazy='dynamic')
 
 
 class Score(db.Model):

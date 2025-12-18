@@ -23,12 +23,12 @@ def create_app():
     login.login_view = 'auth.login'
     login.init_app(flask_app)
 
-    # @login.user_loader
-    # def load_user(user_id):
-    #     return db.session.get(User, int(user_id))
+    @login.user_loader
+    def load_user(user_id):
+        return db.session.get(User, int(user_id))
     return flask_app
 
 
 if __name__ == '__main__':
     app = create_app()
-    app.run()
+    app.run(debug=True)
