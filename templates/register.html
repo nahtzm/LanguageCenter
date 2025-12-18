@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Register{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center">
+    <div class="card w-full max-w-sm shadow-2xl bg-base-100">
+        <div class="card-body">
+            <h2 class="text-2xl font-bold text-center mb-4">Language Center</h2>
+
+            <form method="POST" class="space-y-4">
+                <div class="form-control">
+                    <input type="email" name="email" placeholder="Email"
+                           class="input input-bordered w-full" required>
+                </div>
+
+                <div class="form-control">
+                    <input type="text" name="fullname" placeholder="Full name"
+                           class="input input-bordered w-full" required>
+                </div>
+
+                <div class="form-control">
+                    <input type="text" name="phone" placeholder="Phone"
+                           class="input input-bordered w-full">
+                </div>
+
+                <div class="form-control">
+                    <input type="password" name="password" placeholder="Password"
+                           class="input input-bordered w-full" required>
+                </div>
+
+                <div class="form-control mt-4">
+                    <button class="btn btn-primary w-full" type="submit">Sign Up</button>
+                </div>
+            </form>
+
+            <p class="text-center text-sm mt-4">
+                Đã có tài khoản?
+                <a href="/login" class="link link-primary">Đăng nhập</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

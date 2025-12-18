@@ -1,0 +1,94 @@
+{% extends "dashboard/dashboard_base.html" %}
+{% block title %}Đăng ký khóa học{% endblock %}
+
+{% block dashboard_content %}
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+        <!-- LEFT: COURSE LIST -->
+        <div class="lg:col-span-2 card bg-base-100 shadow">
+            <div class="card-body">
+                <h2 class="card-title">Danh sách các khóa học phù hợp</h2>
+
+                <div class="mt-4 space-y-3 max-h-[420px] overflow-y-auto">
+                    {% for c in courses %}
+                        <div class="flex justify-between items-center p-4 border rounded-box hover:bg-base-200">
+                            <div>
+                                <p class="font-semibold">
+                                    {{ c.course.name }} – {{ c.level.name }}
+                                </p>
+                                <p class="text-sm opacity-70">
+                                    {{ c.current_students }}/{{ c.max_students }} học viên · {{ c.start_date }}
+                                    → {{ c.end_date }}
+                                </p>
+                            </div>
+
+                            <div>
+                                {% if c.id in enrolled_class_ids %}
+                                    <!-- ĐÃ ĐĂNG KÝ -->
+{#                                    <span class="badge badge-success badge-lg">#}
+{#                                        ✔ Đã đăng ký#}
+{#                                    </span>#}
+                                    <button class="btn btn-sm" disabled>Da dang ky</button>
+
+                                {% elif c.current_students >= c.max_students %}
+                                    <!-- LỚP ĐẦY -->
+                                    <span class="badge badge-error badge-lg">Đã đầy</span>
+
+                                {% else %}
+                                    <form method="POST" action="{{ url_for('student.enroll', class_id=c.id) }}">
+                                        <button class="btn btn-success btn-sm">Đăng ký</button>
+                                    </form>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% else %}
+                        <p class="text-center opacity-60">Không có lớp học phù hợp</p>
+                    {% endfor %}
+                </div>
+
+                <div class="mt-4 text-sm opacity-70">
+                    <p>📞 Call: 0987 456 321</p>
+                    <p>✉️ Email: trungtamttk@gmail.com</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT: FILTER -->
+        <div class="card bg-base-100 shadow">
+            <div class="card-body space-y-4">
+                <h2 class="text-xl font-semibold text-center">Đăng ký</h2>
+
+                <form method="get" class="space-y-4">
+                    <div class="form-control">
+                        <label class="label">Khóa học</label>
+                        <select name="course_id" class="select select-bordered">
+                            <option value="">Tất cả</option>
+                            {% for course in course_list %}
+                                <option value="{{ course.id }}"
+                                        {% if request.args.get('course_id') == course.id|string %}selected{% endif %}>
+                                    {{ course.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-control">
+                        <label class="label">Cấp độ</label>
+                        <select name="level_id" class="select select-bordered">
+                            <option value="">Tất cả</option>
+                            {% for level in level_list %}
+                                <option value="{{ level.id }}"
+                                        {% if request.args.get('level_id') == level.id|string %}selected{% endif %}>
+                                    {{ level.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <button class="btn btn-primary w-full">Tìm kiếm</button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}

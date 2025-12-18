@@ -1,0 +1,111 @@
+{% extends "dashboard/dashboard_base.html" %}
+{% block title %}Student Dashboard{% endblock %}
+
+{% block dashboard_content %}
+    <div class="space-y-6">
+
+        <!-- Header -->
+        <div class="flex items-center justify-between">
+            <h1 class="text-2xl font-bold">Trang chủ Học viên</h1>
+            <span class="badge badge-primary">Student</span>
+        </div>
+
+        <!-- Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="stat bg-base-100 shadow rounded-box">
+                <div class="stat-title">Lớp đang học</div>
+                {#                <div class="stat-value">{{ stats.active_classes | default(0) }}</div>#}
+                <div class="stat-value">example</div>
+                <div class="stat-desc">Đang hoạt động</div>
+            </div>
+
+            <div class="stat bg-base-100 shadow rounded-box">
+                <div class="stat-title">Hóa đơn chưa thanh toán</div>
+                {#                <div class="stat-value text-error">{{ stats.unpaid_invoices | default(0) }}</div>#}
+                <div class="stat-value text-error">example</div>
+                <div class="stat-desc">Cần xử lý</div>
+            </div>
+
+            <div class="stat bg-base-100 shadow rounded-box">
+                <div class="stat-title">Điểm trung bình</div>
+                {#                <div class="stat-value text-success">{{ stats.avg_score | default('-') }}</div>#}
+                <div class="stat-value text-success">example</div>
+                <div class="stat-desc">Học kỳ hiện tại</div>
+            </div>
+        </div>
+
+        <!-- Current Classes -->
+        <div class="card bg-base-100 shadow">
+            <div class="card-body">
+                <div class="flex items-center justify-between">
+                    <h2 class="card-title">Lớp đang học</h2>
+                    <a href="/my-enrollments" class="link link-primary">Xem tất cả</a>
+                </div>
+
+                {#                <div class="overflow-x-auto mt-4">#}
+                {#                    <table class="table">#}
+                {#                        <thead>#}
+                {#                        <tr>#}
+                {#                            <th>Lớp</th>#}
+                {#                            <th>Giáo viên</th>#}
+                {#                            <th>Thời gian</th>#}
+                {#                            <th>Trạng thái</th>#}
+                {#                            <th></th>#}
+                {#                        </tr>#}
+                {#                        </thead>#}
+                {#                        <tbody>#}
+                {#                        {% for e in enrollments %}#}
+                {#                            <tr>#}
+                {#                                <td>{{ e.class_name }}</td>#}
+                {#                                <td>{{ e.teacher_name }}</td>#}
+                {#                                <td>{{ e.schedule }}</td>#}
+                {#                                <td>#}
+                {#                                    {% if e.status == 'active' %}#}
+                {#                                        <span class="badge badge-success">Đang học</span>#}
+                {#                                    {% elif e.status == 'upcoming' %}#}
+                {#                                        <span class="badge badge-warning">Sắp bắt đầu</span>#}
+                {#                                    {% else %}#}
+                {#                                        <span class="badge">Kết thúc</span>#}
+                {#                                    {% endif %}#}
+                {#                                </td>#}
+                {#                                <td>#}
+                {#                                    <a href="/my-scores/{{ e.id }}" class="btn btn-sm btn-outline">Chi tiết</a>#}
+                {#                                </td>#}
+                {#                            </tr>#}
+                {#                        {% else %}#}
+                {#                            <tr>#}
+                {#                                <td colspan="5" class="text-center opacity-60">Chưa có lớp nào</td>#}
+                {#                            </tr>#}
+                {#                        {% endfor %}#}
+                {#                        </tbody>#}
+                {#                    </table>#}
+                {#                </div>#}
+                {#            </div>#}
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <a href="{{ url_for("student.class_list") }}" class="card bg-base-100 shadow hover:shadow-lg transition">
+                    <div class="card-body">
+                        <h3 class="card-title">Đăng ký lớp mới</h3>
+                        <p class="text-sm opacity-70">Xem các lớp còn chỗ</p>
+                    </div>
+                </a>
+
+                <a href="/my-scores" class="card bg-base-100 shadow hover:shadow-lg transition">
+                    <div class="card-body">
+                        <h3 class="card-title">Xem điểm</h3>
+                        <p class="text-sm opacity-70">Kết quả học tập</p>
+                    </div>
+                </a>
+
+                <a href="/my-invoices" class="card bg-base-100 shadow hover:shadow-lg transition">
+                    <div class="card-body">
+                        <h3 class="card-title">Hóa đơn</h3>
+                        <p class="text-sm opacity-70">Thanh toán & lịch sử</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

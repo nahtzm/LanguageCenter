@@ -2,6 +2,14 @@ from app import db
 from datetime import datetime, UTC
 from flask_login import UserMixin
 from sqlalchemy.dialects.mysql import DECIMAL
+from enum import Enum
+
+class UserRole(Enum):
+    STUDENT = "student"
+    ADMIN = "admin"
+    TEACHER = "teacher"
+    CASHIER = "cashier"
+
 
 class User(db.Model, UserMixin):
     __abstract__ = True
@@ -11,26 +19,25 @@ class User(db.Model, UserMixin):
     fullname = db.Column(db.String(100), nullable=False)
     password = db.Column(db.String(200), nullable=False)
     phone = db.Column(db.String(20))
+    role = db.Column(db.Enum(UserRole), nullable=False)
 
     def get_id(self):
         return str(self.id)
-
-    def get_role(self):
-        if isinstance(self, Student):
-            return 'student'
-        elif isinstance(self, Staff):
-            return self.role
-        return None
-
 
 class Student(User):
     __tablename__ = 'student'
 
     enrollments = db.relationship('Enrollment', backref='student', lazy='dynamic')
 
+    def __init__(self, email, password, fullname, phone):
+        self.email = email
+        self.password = password
+        self.fullname = fullname
+        self.phone = phone
+        self.role = UserRole.STUDENT
+
 class Staff(User):
     __tablename__ = 'staff'
-    role = db.Column(db.String(20))
 
     taught_classes = db.relationship('Class', backref='teacher', lazy='dynamic')
     issued_invoices = db.relationship('Invoice', backref='cashier', lazy='dynamic')
