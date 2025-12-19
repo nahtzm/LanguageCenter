@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "layout/base.html" %}
 
 {% block content %}
 <div class="drawer lg:drawer-open min-h-screen">
@@ -26,15 +26,18 @@
       <div class="flex-none gap-2">
           <!-- User menu -->
         <div class="dropdown dropdown-end">
-          <label tabindex="0" class="btn btn-ghost btn-circle avatar">
-            <div class="w-8 rounded-full">
-              <img src="https://ui-avatars.com/api/?name=User"  alt="."/>
-            </div>
-          </label>
-          <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-40">
-            <li><a href="#">Profile</a></li>
-            <li><a href="/logout">Logout</a></li>
-          </ul>
+            <label tabindex="0" class="btn btn-ghost flex items-center gap-3 px-2">
+                <span class="font-medium hidden md:block">{{ current_user.fullname }}</span>
+                <div class="avatar">
+                    <div class="w-8 rounded-full">
+                        <img src="https://ui-avatars.com/api/?name={{ current_user.fullname }}" alt="Avatar"/>
+                    </div>
+                </div>
+            </label>
+            <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-40">
+                <li><a href="#">Profile</a></li>
+                <li><a href="/logout">Logout</a></li>
+            </ul>
         </div>
       </div>
     </div>
@@ -55,7 +58,6 @@
 
       <!-- Menu (render theo role) -->
           <ul class="menu p-4">
-                {{ current_user.role }}
               {% if current_user.role == UserRole.STUDENT %}
         <!-- Student -->
                   <li class="menu-title">Student</li>
@@ -67,7 +69,9 @@
 
                   <!-- Teacher -->
                   <li class="menu-title mt-4">Teacher</li>
-                  <li><a href="/teacher/classes">Lớp giảng dạy</a></li>
+                  <li><a href="/teacher/dashboard">Lớp giảng dạy</a></li>
+                  <li><a href="/teacher/enter_score">Nhập điểm</a></li>
+                  <li><a href="/teacher/roll_call">Điểm danh</a></li>
               {% endif %}
 {##}
 {#        <!-- Admin -->#}

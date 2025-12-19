@@ -1,0 +1,142 @@
+{% extends "/layout/dashboard_base.html" %}
+
+{% block title %}
+Nhập điểm - Giáo viên
+{% endblock %}
+
+{% block dashboard_content %}
+<div class="container mx-auto p-6 max-w-7xl">
+  <h1 class="text-3xl font-bold mb-8 text-center">
+    NHẬP ĐIỂM HỌC VIÊN
+  </h1>
+
+  <!-- SELECT CLASS -->
+  <form method="GET" class="mb-6">
+    <div class="max-w-md">
+      <label class="label font-semibold">
+        Lớp đang dạy
+      </label>
+
+      <select
+        name="class_id"
+        class="select select-bordered w-full"
+        onchange="this.form.submit()"
+      >
+        <option value="" disabled {% if not selected_class %}selected{% endif %}>
+          Chọn lớp
+        </option>
+
+        {% for cls in current_user.taught_classes %}
+        <option
+          value="{{ cls.id }}"
+          {% if selected_class and selected_class.id == cls.id %}selected{% endif %}
+        >
+          {{ cls.name }} ({{ cls.course.name }} - {{ cls.level.name }})
+        </option>
+        {% endfor %}
+      </select>
+    </div>
+  </form>
+
+  {% if selected_class and enrollments %}
+  <form method="POST" action="{{ url_for('teacher.save_scores') }}">
+    <input type="hidden" name="class_id" value="{{ selected_class.id }}">
+
+    <div class="overflow-x-auto rounded-lg shadow">
+      <table class="table table-zebra w-full">
+        <thead class="bg-base-300">
+          <tr>
+            <th class="text-center">Mã HV</th>
+            <th>Họ tên</th>
+
+            {% for config in score_configs if config.is_active %}
+            <th class="text-center">
+              {{ config.name }}<br>
+              <small class="opacity-60">
+                ({{ (config.weight * 100)|round(0) }}%)
+              </small>
+            </th>
+            {% endfor %}
+
+            <th class="text-center">Trung bình</th>
+            <th class="text-center">Kết quả</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {% for enrollment in enrollments %}
+          <tr>
+            <td class="text-center font-semibold">
+              {{ enrollment.student.code }}
+            </td>
+
+            <td>
+              {{ enrollment.student.fullname }}
+            </td>
+
+            {% for config in score_configs if config.is_active %}
+            {% set score = enrollment.scores.filter_by(
+              score_config_id=config.id
+            ).first() %}
+            <td class="text-center">
+              {% if config.auto_calculated %}
+                <span class="font-bold">
+                  {{ score.score_value if score else "—" }}
+                </span>
+              {% else %}
+                <input
+                  type="number"
+                  name="score_{{ enrollment.id }}_{{ config.id }}"
+                  value="{{ score.score_value if score else '' }}"
+                  min="0"
+                  max="10"
+                  step="0.1"
+                  class="input input-bordered input-sm w-20 text-center"
+                >
+              {% endif %}
+            </td>
+            {% endfor %}
+
+            <td class="text-center font-bold">
+              {{ result_map[enrollment.id].avg
+                 if result_map[enrollment.id].avg is not none
+                 else "—" }}
+            </td>
+
+            <td class="text-center">
+              {% if result_map[enrollment.id].result %}
+                <span class="badge
+                  {% if result_map[enrollment.id].result == 'Đạt' %}
+                    badge-success
+                  {% else %}
+                    badge-error
+                  {% endif %}
+                ">
+                  {{ result_map[enrollment.id].result }}
+                </span>
+              {% else %}
+                —
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="flex justify-end mt-8">
+      <button type="submit" class="btn btn-primary btn-lg px-10">
+        💾 Lưu điểm
+      </button>
+    </div>
+  </form>
+
+  {% else %}
+  <div class="alert alert-info mt-10">
+    <span>
+      Vui lòng chọn lớp để nhập điểm cho học viên.
+    </span>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

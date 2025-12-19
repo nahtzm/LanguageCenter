@@ -1,4 +1,4 @@
-{% extends "dashboard/dashboard_base.html" %}
+{% extends "/layout/dashboard_base.html" %}
 {% block title %}Teacher Dashboard{% endblock %}
 
 {% block dashboard_content %}
@@ -12,38 +12,10 @@
                 <p class="opacity-70">Tổng quan lớp học & công việc giảng dạy</p>
             </div>
             <div class="badge badge-primary badge-lg">
-                {{ current_user.fullname }}
+                Teacher
             </div>
         </div>
 
-        <!-- STAT CARDS -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-
-            <div class="card bg-base-100 shadow">
-                <div class="card-body">
-                    <h2 class="card-title">📚 Lớp đang dạy</h2>
-                    <p class="text-3xl font-bold text-primary">{{ total_classes }}</p>
-                    <p class="text-sm opacity-70">Lớp học đang hoạt động</p>
-                </div>
-            </div>
-
-            <div class="card bg-base-100 shadow">
-                <div class="card-body">
-                    <h2 class="card-title">👨‍🎓 Học viên</h2>
-                    <p class="text-3xl font-bold text-secondary">{{ total_students }}</p>
-                    <p class="text-sm opacity-70">Tổng số học viên</p>
-                </div>
-            </div>
-
-            <div class="card bg-base-100 shadow">
-                <div class="card-body">
-                    <h2 class="card-title">⏰ Buổi học hôm nay</h2>
-                    <p class="text-3xl font-bold text-accent">{{ today_classes }}</p>
-                    <p class="text-sm opacity-70">Theo lịch giảng dạy</p>
-                </div>
-            </div>
-
-        </div>
 
         <!-- CLASS LIST -->
         <div class="card bg-base-100 shadow">
@@ -51,7 +23,7 @@
                 <h2 class="card-title">📋 Danh sách lớp học</h2>
 
                 <div class="overflow-x-auto">
-                    <table class="table table-zebra">
+                    <table class="table">
                         <thead>
                         <tr>
                             <th>Lớp</th>
@@ -67,7 +39,7 @@
                                 <td class="font-semibold">{{ c.name }}</td>
                                 <td>{{ c.course.name }} – {{ c.level.name }}</td>
                                 <td>{{ c.current_students }}/{{ c.max_students }}</td>
-                                <td>{{ c.start_date }} → {{ c.end_date }}</td>
+                                <td>{{ c.start_date.strftime("%d/%m/%Y") }} → {{ c.end_date.strftime("%d/%m/%Y") }}</td>
                                 <td>
                                     <a href="{{ url_for('teacher.dashboard', class_id=c.id) }}"
                                        class="btn btn-sm btn-outline btn-primary">

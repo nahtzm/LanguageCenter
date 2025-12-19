@@ -1,8 +1,11 @@
-from app import db
 from datetime import datetime, UTC
+from enum import Enum
+
 from flask_login import UserMixin
 from sqlalchemy.dialects.mysql import DECIMAL
-from enum import Enum
+
+from app import db
+
 
 class UserRole(Enum):
     STUDENT = "student"
@@ -21,26 +24,27 @@ class User(db.Model, UserMixin):
     phone = db.Column(db.String(20))
     role = db.Column(db.Enum(UserRole), nullable=False)
 
-    def get_id(self):
-        return str(self.id)
 
 class Student(User):
     __tablename__ = 'student'
+    code = db.Column(db.String(10), unique=True, nullable=False)
 
     enrollments = db.relationship('Enrollment', backref='student', lazy='dynamic')
 
-    def __init__(self, email, password, fullname, phone):
+    def __init__(self, email, password, fullname, phone, code):
         self.email = email
         self.password = password
         self.fullname = fullname
         self.phone = phone
         self.role = UserRole.STUDENT
+        self.code = code
 
     def get_id(self):
         return f"student:{self.id}"
 
 class Staff(User):
     __tablename__ = 'staff'
+    code = db.Column(db.String(10), nullable=False, unique=True)
 
     taught_classes = db.relationship('Class', backref='teacher', lazy='dynamic')
     issued_invoices = db.relationship('Invoice', backref='cashier', lazy='dynamic')
@@ -73,7 +77,7 @@ class Class(db.Model):
     __tablename__ = 'class_table'
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50), nullable=False)  # ví dụ: IELTS-B01
+    name = db.Column(db.String(50), nullable=False)
     start_date = db.Column(db.Date, nullable=False)
     end_date = db.Column(db.Date, nullable=False)
     max_students = db.Column(db.Integer, nullable=False, default=25)
@@ -91,7 +95,7 @@ class Enrollment(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     enroll_date = db.Column(db.DateTime, default=datetime.now(UTC))
-    status = db.Column(db.String(20), default='pending')  # pending, confirmed, cancelled
+    status = db.Column(db.String(20), default='confirmed')  # pending, confirmed, cancelled
 
     student_id = db.Column(db.Integer, db.ForeignKey('student.id'), nullable=False)
     class_id = db.Column(db.Integer, db.ForeignKey('class_table.id'), nullable=False)
@@ -140,7 +144,7 @@ class Invoice(db.Model):
     amount = db.Column(DECIMAL(12, 2), nullable=False)
     issue_date = db.Column(db.DateTime, default=datetime.now(UTC))
     payment_date = db.Column(db.DateTime, nullable=True)
-    status = db.Column(db.String(20), default='pending')
+    status = db.Column(db.String(20), default='paid')
 
     enrollment_id = db.Column(db.Integer, db.ForeignKey('enrollment.id'), nullable=False)
     cashier_id = db.Column(db.Integer, db.ForeignKey('staff.id'))

@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "layout/base.html" %}
 {% block title %}Login{% endblock %}
 
 {% block content %}
@@ -21,7 +21,7 @@
                         <label class="label p-1">
                             <span class="label-text opacity-70">Email</span>
                         </label>
-                        <input type="email" name="email" placeholder="email@vi-du.com"
+                        <input type="email" name="email" placeholder=""
                                class="input input-bordered w-full focus:input-primary" required>
                     </div>
 
@@ -29,7 +29,7 @@
                         <label class="label p-1">
                             <span class="label-text opacity-70">Mật khẩu</span>
                         </label>
-                        <input type="password" name="password" placeholder="••••••••"
+                        <input type="password" name="password" placeholder=""
                                class="input input-bordered w-full focus:input-primary" required>
                     </div>
 
@@ -52,7 +52,6 @@
     <script>
         function setRole(role) {
             document.getElementById('role_input').value = role;
-            console.log("Role hiện tại:", role); // Để debug
         }
     </script>
 {% endblock %}
