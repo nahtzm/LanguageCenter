@@ -80,15 +80,15 @@ def enroll(class_id):
         )
         db.session.add(enrollment)
 
-        # 4. Cập nhật sĩ số
-        cls.current_students += 1
-
-        # 5. Tạo hóa đơn
-        invoice = Invoice(
-            enrollment=enrollment,
-            amount=cls.level.tuition_fee
-        )
-        db.session.add(invoice)
+        # # 4. Cập nhật sĩ số
+        # cls.current_students += 1
+        #
+        # # 5. Tạo hóa đơn
+        # invoice = Invoice(
+        #     enrollment=enrollment,
+        #     amount=cls.level.tuition_fee
+        # )
+        # db.session.add(invoice)
 
         db.session.commit()
 

@@ -41,7 +41,7 @@
                     <form method="POST" action="{{ url_for('student.enroll', class_id=c.id) }}" class="inline">
                       {{ csrf_token() if csrf_token else '' }}
                       <button type="submit" class="btn btn-success btn-sm w-full sm:w-auto">
-                        Đăng ký ngay
+                        Đăng ký
                       </button>
                     </form>
                   {% endif %}

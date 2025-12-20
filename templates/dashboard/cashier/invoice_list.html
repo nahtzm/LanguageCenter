@@ -1,0 +1,89 @@
+{% extends "/layout/dashboard_base.html" %}
+
+{% block title %}
+  Danh sách hóa đơn
+{% endblock %}
+
+{% block dashboard_content %}
+<div class="container mx-auto p-6 max-w-7xl">
+
+  <h1 class="text-3xl font-bold mb-8 text-center">
+    DANH SÁCH HÓA ĐƠN HỌC PHÍ
+  </h1>
+
+  <div class="overflow-x-auto rounded-lg shadow">
+    <table class="table table-zebra w-full">
+      <thead class="bg-base-300">
+        <tr>
+          <th class="text-center">Mã HV</th>
+          <th>Họ tên</th>
+          <th>Khóa học</th>
+          <th class="text-right">Học phí</th>
+          <th class="text-center">Ngày lập</th>
+          <th class="text-center">Trạng thái</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for invoice in invoices %}
+        <tr>
+          <td class="text-center font-semibold">
+            {{ invoice.enrollment.student.code }}
+          </td>
+
+          <td>
+            {{ invoice.enrollment.student.fullname }}
+          </td>
+
+          <td>
+            {{ invoice.enrollment.class_ref.course.name }}
+            -
+            {{ invoice.enrollment.class_ref.level.name }}
+          </td>
+
+          <td class="text-right font-semibold text-primary">
+            {{ "{:,.0f}".format(invoice.amount) }}&nbsp;đ
+          </td>
+
+          <td class="text-center">
+            {{ invoice.issue_date.strftime("%d/%m/%Y") }}
+          </td>
+
+          <td class="text-center">
+            {% if invoice.status == 'paid' %}
+              <span class="badge badge-success">
+              Paid
+              </span>
+            {% else %}
+              <span class="badge badge-warning">
+              Unpaid
+              </span>
+            {% endif %}
+          </td>
+
+{#          <td class="text-center">#}
+{#            {% if invoice.enrollment.status == 'pending' %}#}
+{#              <form method="POST"#}
+{#                    action="{{ url_for('cashier.create_invoice', invoice_id=invoice.id) }}">#}
+{#                <button class="btn btn-success btn-sm">#}
+{#                  Xác nhận thanh toán#}
+{#                </button>#}
+{#              </form>#}
+{#            {% else %}#}
+{#              <span class="opacity-50">—</span>#}
+{#            {% endif %}#}
+{#          </td>#}
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="7" class="text-center opacity-60 py-6">
+            Không có hóa đơn nào
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+</div>
+{% endblock %}

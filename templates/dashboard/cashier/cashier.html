@@ -1,0 +1,134 @@
+{% extends "layout/dashboard_base.html" %}
+{% block title %}Student Dashboard{% endblock %}
+
+{% block dashboard_content %}
+<div class="container mx-auto p-6 max-w-6xl">
+
+    <!-- TITLE -->
+    <h1 class="text-3xl font-bold text-center mb-8">
+      LẬP HÓA ĐƠN HỌC PHÍ
+    </h1>
+
+    <!-- ENROLLMENT LIST -->
+    <div class="card bg-base-100 shadow mb-8">
+      <div class="card-body">
+        <h2 class="card-title">
+          Danh sách học viên chờ xác nhận
+        </h2>
+
+        <div class="overflow-x-auto mt-4">
+          <table class="table table-zebra w-full">
+            <thead>
+              <tr>
+                <th>Học viên</th>
+                <th>Khóa học</th>
+                <th>Học phí</th>
+                <th>Trạng thái</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- ROW 1 -->
+              <tr>
+                <td>Nguyễn Văn A</td>
+                <td>IELTS Beginner</td>
+                <td>3.000.000 ₫</td>
+                <td>
+                  <span class="badge badge-warning">Pending</span>
+                </td>
+                <td>
+                  <button class="btn btn-sm btn-primary">
+                    Lập hóa đơn
+                  </button>
+                </td>
+              </tr>
+
+              <!-- ROW 2 -->
+              <tr>
+                <td>Trần Thị B</td>
+                <td>Toeic Intermediate</td>
+                <td>3.500.000 ₫</td>
+                <td>
+                  <span class="badge badge-warning">Pending</span>
+                </td>
+                <td>
+                  <button class="btn btn-sm btn-primary">
+                    Lập hóa đơn
+                  </button>
+                </td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- INVOICE FORM -->
+    <div class="card bg-base-100 shadow">
+      <div class="card-body">
+        <h2 class="card-title mb-4">
+          Thông tin hóa đơn
+        </h2>
+
+        <form class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+          <div>
+            <label class="label font-semibold">Họ tên học viên</label>
+            <input
+              type="text"
+              class="input input-bordered w-full"
+              value="Nguyễn Văn A"
+              disabled
+            />
+          </div>
+
+          <div>
+            <label class="label font-semibold">Khóa học</label>
+            <input
+              type="text"
+              class="input input-bordered w-full"
+              value="IELTS Beginner"
+              disabled
+            />
+          </div>
+
+          <div>
+            <label class="label font-semibold">Học phí</label>
+            <input
+              type="text"
+              class="input input-bordered w-full"
+              value="3.000.000 ₫"
+              disabled
+            />
+          </div>
+
+          <div>
+            <label class="label font-semibold">Ngày nộp</label>
+            <input
+              type="date"
+              class="input input-bordered w-full"
+              value="2025-12-20"
+            />
+          </div>
+
+          <div>
+            <label class="label font-semibold">Trạng thái thanh toán</label>
+            <select class="select select-bordered w-full">
+              <option>Chưa thanh toán</option>
+              <option>Đã thanh toán</option>
+            </select>
+          </div>
+
+          <div class="flex items-end">
+            <button class="btn btn-success w-full">
+              💾 Xác nhận & lưu hóa đơn
+            </button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+
+  </div>
+{% endblock %}

@@ -61,8 +61,7 @@
               {% if current_user.role == UserRole.STUDENT %}
         <!-- Student -->
                   <li class="menu-title">Student</li>
-                  <li><a href="/student/dashboard">Trang chủ</a></li>
-                  <li><a href="/my-enrollments">Lớp của tôi</a></li>
+                  <li><a href="/student/dashboard">Lớp học</a></li>
                   <li><a href="/my-scores">Điểm</a></li>
                   <li><a href="/my-invoices">Hóa đơn</a></li>
               {% elif current_user.role == UserRole.TEACHER %}
@@ -72,6 +71,11 @@
                   <li><a href="/teacher/dashboard">Lớp giảng dạy</a></li>
                   <li><a href="/teacher/enter_score">Nhập điểm</a></li>
                   <li><a href="/teacher/roll_call">Điểm danh</a></li>
+              {% elif current_user.role == UserRole.CASHIER %}
+                  <li class="menu-title mt-4">Cashier</li>
+                  <li><a href="/cashier/dashboard">Dashboard</a></li>
+                  <li><a href="/cashier/enrollments">Danh sách đăng ký</a></li>
+                  <li><a href="/cashier/invoices">Danh sách hóa đơn</a></li>
               {% endif %}
 {##}
 {#        <!-- Admin -->#}

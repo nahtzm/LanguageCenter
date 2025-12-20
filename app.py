@@ -21,10 +21,12 @@ def create_app():
     from routes.public import public
     from routes.student import student_routes
     from routes.teacher import teacher_routes
+    from routes.cashier import cashier_routes
     flask_app.register_blueprint(auth, url_prefix='/')
     flask_app.register_blueprint(public, url_prefix='/')
     flask_app.register_blueprint(student_routes, url_prefix='/student')
     flask_app.register_blueprint(teacher_routes, url_prefix='/teacher')
+    flask_app.register_blueprint(cashier_routes, url_prefix='/cashier')
 
     login = LoginManager()
     login.login_view = 'auth.login'

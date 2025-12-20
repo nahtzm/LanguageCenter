@@ -1,0 +1,72 @@
+{% extends "/layout/dashboard_base.html" %}
+
+{% block title %}
+  Enrollment chờ xác nhận
+{% endblock %}
+
+{% block dashboard_content %}
+<form method="POST" class="grid grid-cols-2 gap-6">
+
+  <!-- Học viên -->
+  <div>
+    <label class="label">Họ tên học viên</label>
+    <input
+      type="text"
+      class="input input-bordered w-full"
+      value="{{ enrollment.student.fullname }}"
+      readonly
+    >
+  </div>
+
+  <!-- Khóa học -->
+  <div>
+    <label class="label">Khóa học</label>
+    <input
+      type="text"
+      class="input input-bordered w-full"
+      value="{{ enrollment.class_ref.course.name }} - {{ enrollment.class_ref.level.name }}"
+      readonly
+    >
+  </div>
+
+  <!-- Học phí -->
+  <div>
+    <label class="label">Học phí</label>
+    <input
+      type="text"
+      class="input input-bordered w-full text-right font-semibold"
+      value="{{ '{:,.0f}'.format(enrollment.class_ref.level.tuition_fee) }} đ"
+      readonly
+    >
+  </div>
+
+  <!-- Ngày nộp -->
+  <div>
+    <label class="label">Ngày nộp</label>
+    <input
+      type="date"
+      class="input input-bordered w-full"
+      value="{{ date.strftime('%Y-%m-%d') }}"
+      readonly
+    >
+  </div>
+
+  <!-- Trạng thái thanh toán -->
+  <div class="col-span-2">
+    <label class="label">Trạng thái thanh toán</label>
+    <select name="payment_status" class="select select-bordered w-full">
+        <option value="paid">Đã thanh toán</option>
+      <option value="unpaid">Chưa thanh toán</option>
+    </select>
+  </div>
+
+  <!-- Submit -->
+  <div class="col-span-2 text-right mt-4">
+    <button class="btn btn-success btn-lg">
+      💾 Xác nhận & lưu hóa đơn
+    </button>
+  </div>
+
+</form>
+
+{% endblock %}

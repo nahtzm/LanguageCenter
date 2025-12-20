@@ -95,7 +95,7 @@ class Enrollment(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     enroll_date = db.Column(db.DateTime, default=datetime.now(UTC))
-    status = db.Column(db.String(20), default='confirmed')  # pending, confirmed, cancelled
+    status = db.Column(db.String(20), default='pending')
 
     student_id = db.Column(db.Integer, db.ForeignKey('student.id'), nullable=False)
     class_id = db.Column(db.Integer, db.ForeignKey('class_table.id'), nullable=False)

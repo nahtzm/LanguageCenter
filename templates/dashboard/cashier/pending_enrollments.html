@@ -1,0 +1,83 @@
+{% extends "/layout/dashboard_base.html" %}
+
+{% block title %}
+  Enrollment chờ xác nhận
+{% endblock %}
+
+{% block dashboard_content %}
+<div class="container mx-auto p-6 max-w-8xl">
+
+  <h1 class="text-3xl font-bold mb-8 text-center">
+    DANH SÁCH HỌC VIÊN CHỜ THANH TOÁN
+  </h1>
+
+  {% if enrollments %}
+    <div class="overflow-x-auto rounded-lg shadow">
+      <table class="table table-zebra w-full">
+        <thead class="bg-base-300">
+          <tr>
+            <th class="text-center">Mã HV</th>
+            <th>Họ tên</th>
+            <th>Khóa học</th>
+            <th class="text-center">Học phí</th>
+            <th class="text-center">Ngày đăng ký</th>
+            <th class="text-center">Trạng thái</th>
+            <th class="text-center">Thao tác</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {% for enrollment in enrollments %}
+          <tr>
+            <td class="text-center font-semibold">
+              {{ enrollment.student.code }}
+            </td>
+
+            <td>
+              {{ enrollment.student.fullname }}
+            </td>
+
+            <td>
+              {{ enrollment.class_ref.course.name }}
+              -
+              {{ enrollment.class_ref.level.name }}
+            </td>
+
+            <td class="text-center font-bold text-primary">
+              {{ "{:,.0f}".format(enrollment.class_ref.level.tuition_fee) }}&nbsp;đ
+            </td>
+
+            <td class="text-center">
+              {{ enrollment.enroll_date.strftime('%d/%m/%Y') }}
+            </td>
+
+            <td class="text-center">
+              <span class="badge badge-warning">
+                  pending
+              </span>
+            </td>
+
+            <td class="text-center">
+              <form
+                method="GET"
+                action="{{ url_for('cashier.create_invoice', enrollment_id=enrollment.id) }}"
+              >
+                <button class="btn btn-success btn-sm">
+                    create
+                </button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+  {% else %}
+    <div class="alert alert-info mt-10">
+      <span>Không có học viên nào đang chờ thanh toán.</span>
+    </div>
+  {% endif %}
+
+</div>
+{% endblock %}
