@@ -5,7 +5,7 @@ from app import db
 from utils import get_enrolled_classes
 from models import Course, Class, Level, Enrollment, Invoice, Student, UserRole
 
-student_routes = Blueprint('student', __name__)
+student_routes = Blueprint('student_route', __name__)
 
 
 @student_routes.route('/dashboard')
@@ -60,7 +60,7 @@ def enroll(class_id):
     # 1. Check sĩ số
     if cls.current_students >= cls.max_students:
         flash("Lớp đã đủ học viên", "error")
-        return redirect(url_for("student.class_list"))
+        return redirect(url_for("student_route.class_list"))
 
     # 2. Check đã đăng ký chưa
     exists = Enrollment.query.filter_by(
@@ -70,7 +70,7 @@ def enroll(class_id):
 
     if exists:
         flash("Bạn đã đăng ký lớp này", "warning")
-        return redirect(url_for("student.class_list"))
+        return redirect(url_for("student_route.class_list"))
 
     try:
         # 3. Tạo enrollment
@@ -101,4 +101,4 @@ def enroll(class_id):
         db.session.rollback()
         flash("Có lỗi xảy ra khi đăng ký lớp", "error")
 
-    return redirect(url_for("student.class_list"))
+    return redirect(url_for("student_route.class_list"))

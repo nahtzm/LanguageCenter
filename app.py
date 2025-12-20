@@ -3,12 +3,15 @@ from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_mail import Mail
+from flask_admin import Admin
 
 from config import config
 
 db = SQLAlchemy()
 migrate = Migrate()
 mail = Mail()
+admin = Admin()
+
 
 def create_app():
     flask_app = Flask(__name__)
@@ -16,6 +19,23 @@ def create_app():
     db.init_app(flask_app)
     migrate.init_app(flask_app, db)
     mail.init_app(flask_app)
+
+    from routes.admin import AdminModelView, ClassAdminView, LevelAdminView
+    # ===== ADMIN =====
+    admin.init_app(flask_app)
+    admin.name = "Admin"
+    admin.url = "/admin"
+
+    from models import Student, Staff, Class, Course, Enrollment, Invoice, Level
+
+    admin.add_view(AdminModelView(Staff, db.session))
+    admin.add_view(ClassAdminView(Class, db.session))
+    admin.add_view(AdminModelView(Student, db.session))
+    admin.add_view(AdminModelView(Course, db.session))
+    admin.add_view(AdminModelView(Enrollment, db.session))
+    admin.add_view(AdminModelView(Invoice, db.session))
+    admin.add_view(LevelAdminView(Level, db.session))
+
 
     from routes.auth import auth
     from routes.public import public

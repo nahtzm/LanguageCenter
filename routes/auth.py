@@ -26,7 +26,7 @@ def login():
             login_user(user)
 
             if user.role == UserRole.ADMIN:
-                return redirect(url_for('public.welcome'))
+                return redirect('/admin')
             elif user.role == UserRole.CASHIER:
                 return redirect(url_for('cashier.dashboard'))
             elif user.role == UserRole.TEACHER:
