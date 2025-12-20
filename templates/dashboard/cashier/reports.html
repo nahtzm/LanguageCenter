@@ -1,0 +1,102 @@
+{% extends "/layout/dashboard_base.html" %}
+
+{% block title %}Báo cáo - Thống kê{% endblock %}
+
+{% block dashboard_content %}
+<div class="container mx-auto p-6 space-y-10">
+
+  <h1 class="text-3xl font-bold text-center">BÁO CÁO - THỐNG KÊ</h1>
+
+  <!-- ================= 1. SỐ HỌC VIÊN THEO KHÓA ================= -->
+  <div class="card bg-base-100 shadow">
+    <div class="card-body">
+      <h2 class="text-xl font-semibold mb-4">Số học viên theo khóa</h2>
+
+      <table class="table table-zebra">
+        <thead>
+          <tr>
+            <th>Khóa học</th>
+            <th class="text-right">Số học viên</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in students_by_course %}
+          <tr>
+            <td>{{ row.course }}</td>
+            <td class="text-right font-semibold">{{ row.count }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ================= 2. TỶ LỆ ĐẠT ================= -->
+  <div class="card bg-base-100 shadow">
+    <div class="card-body">
+      <h2 class="text-xl font-semibold mb-4">Tỷ lệ đạt theo khóa học</h2>
+
+      <table class="table table-zebra">
+        <thead>
+          <tr>
+            <th>Khóa học</th>
+            <th class="text-right">Tỷ lệ đạt (%)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in pass_rate_by_course %}
+          <tr>
+            <td>{{ row.course }}</td>
+            <td class="text-right font-semibold">
+              {{ row.rate }}%
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ================= 3. DOANH THU THEO THÁNG ================= -->
+<div class="card bg-base-100 shadow">
+  <div class="card-body">
+    <h2 class="text-xl font-semibold mb-4">Doanh thu theo tháng</h2>
+    <div class="h-[350px]">
+      <canvas id="revenueChart"></canvas>
+    </div>
+  </div>
+</div>
+
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const ctx = document.getElementById('revenueChart');
+
+new Chart(ctx, {
+  type: 'bar',
+  data: {
+    labels: {{ revenue_labels | tojson }},
+    datasets: [{
+      label: 'Doanh thu (VND)',
+      data: {{ revenue_values | tojson }},
+      backgroundColor: '#3b82f6',
+      borderRadius: 6
+    }]
+  },
+  options: {
+  responsive: true,
+  maintainAspectRatio: false,
+  scales: {
+    y: {
+      beginAtZero: true,
+      ticks: {
+        callback: value => value.toLocaleString('vi-VN') + ' đ'
+      }
+    }
+  }
+}
+});
+</script>
+{% endblock %}

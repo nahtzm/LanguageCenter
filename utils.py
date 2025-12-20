@@ -78,3 +78,27 @@ def calculate_average_and_result(enrollment, score_configs):
     result = "Đạt" if avg >= 5 else "Rớt"
     return avg, result
 
+
+def calculate_average(enrollment):
+    total = 0
+    total_weight = 0
+
+    configs = ScoreConfig.query.filter_by(is_active=True).all()
+
+    for config in configs:
+        if config.auto_calculated:
+            value = calculate_attendance_score(enrollment.id) or 0
+        else:
+            score = enrollment.scores.filter_by(
+                score_config_id=config.id
+            ).first()
+            value = score.score_value if score else 0
+
+        total += value * config.weight
+        total_weight += config.weight
+
+    if total_weight == 0:
+        return 0
+
+    return round(total / total_weight, 2)
+
